@@ -36,15 +36,22 @@ const categories = []; // 상품으로부터 카테고리 목록을 저장할 �
 // 6. 템플릿을 문서에 삽입
 
 // 카테고리 바 템플릿 그리기 함수
-const drawCategory = () => {
+const drawCategory = async () => {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.categoryTemp, true);
   // 2. 요소 선택
   const category = frag.querySelector('.categories')
   // 3. 필요한 데이터 불러오기
+  const { data: productList } = await api.get('/products');
+  // 카테고리 배열 만들기
+  productList.forEach(item => {
+    // 상품을 돌면서 카테고리 중복체크하여 푸쉬
+    if (!categories.includes(item.category)) {
+      categories.push(item.category);
+    }
+  });
+  console.log(categories);
   // 4. 내용 채우기
-  // :: drawProductList 함수를 실행했을때, 요청을 통해 생성한 카테고리 배열을 사용하여 카테고리 항목만큼 카테고리 메뉴에 추가한다.
-  // :: drawProductList 함수의 api 요청에서 쿼리가 추가될 경우 카테고리 항목을 잘못 불러올수도 있는 버그가 예상된다. 발생시 수정하자
   categories.forEach(item => {
     // 1. 템플릿 복사
     const frag = document.importNode(templates.categoryItemTemp, true);
@@ -54,10 +61,17 @@ const drawCategory = () => {
     // 4. 내용 채우기
     categoriItemEl.textContent = item;
     // 5. 이벤트 리스너 등록하기
+    categoriItemEl.addEventListener('click', async (e) => {
+      const categoryName = e.target.textContent;
+      drawProductList(categoryName)
+    })
     // 6. 템플릿을 문서에 삽입
     category.appendChild(frag);
   })
   // 5. 이벤트 리스너 등록하기
+  document.querySelector('.logo').addEventListener('click', (e) => {
+    drawProductList();
+  });
   // 6. 템플릿을 문서에 삽입
   // root 엘리먼트에 삽입하지 않고 따로 nav 엘리먼트를 만든 이유는 카테고리 항목이 네비게이션 역할을 하기 때문에, 어떤 템플릿이 출력되어도 고정되어서 나타나야 하기 때문이다.
   document.querySelector('.nav').appendChild(frag);
@@ -93,7 +107,7 @@ const drawLoginForm = () => {
 }
 
 // 상품 리스트 템플릿 그리기 함수
-const drawProductList = async () => {
+const drawProductList = async (category) => {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.productListTemplate, true);
 
@@ -102,19 +116,15 @@ const drawProductList = async () => {
 
   // 3. 필요한 데이터 불러오기
   // 제품 api 요청
-  const { data: productList } = await api.get('/products');
+  const { data: productList } = await api.get('/products',{
+    params: {
+      _embed: "options",
+      category: category
+    }
+  });
   console.log(productList);// 확인용 콘솔
 
   // 4. 내용 채우기
-
-  // 카테고리 배열 만들기
-  productList.forEach(item => {
-    // 상품을 돌면서 카테고리 중복체크하여 푸쉬
-    if (!categories.includes(item.category)){
-      categories.push(item.category);
-    }
-  });
-  console.log(categories);
   // 프로덕트 리스트 응답 데이터를 바탕으로 프로덕트 아이템 생성 및 내용 채워넣기
   productList.forEach(item => {
     // 1. 템플릿 복사
@@ -135,7 +145,7 @@ const drawProductList = async () => {
   });
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
-  drawCategory(); // 카테고이 템플릿 생성 함수의 실행 시점이 아직 개운치 않으므로 추가 개발 시 신경쓰자.
+
   rootEl.textContent = '';
   rootEl.appendChild(frag);
 }
@@ -144,6 +154,8 @@ const drawProductList = async () => {
 if (localStorage.getItem('token')){
   // 토큰이 존재하면 바로 상품 리스트 템플릿을 그려준다.
   drawProductList();
+  drawCategory();// 로그인 후 처음 실행시 함수가 실행되지 않음
+
 }else{
   // 토큰이 존재하지 않으면 로그임 템플릿을 그려준다.
   drawLoginForm();

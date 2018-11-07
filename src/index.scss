@@ -24,7 +24,7 @@ body.loading::after{
   background-color: rgba(0,0,0,0.3);
 }
 .root{
-  margin-top: 50px;
+  margin-top: 100px;
 }
 .login-form{
   width:400px;
@@ -56,10 +56,26 @@ body.loading::after{
     background-repeat: no-repeat;
   }
 }
-
-.nav{
+.logo{
   position: fixed;
   top:0;
+  left:0;
+  width:100%;
+  height: 30px;
+  background: #fff;
+  color:#000;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img{
+    width:20px;
+    cursor: pointer;
+  }
+}
+.nav{
+  position: fixed;
+  top:30px;
   left:0;
   width:100%;
   height: 30px;
