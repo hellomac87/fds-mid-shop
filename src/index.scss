@@ -165,3 +165,63 @@ body.loading::after{
     flex-direction: column;
   }
 }
+
+
+// 로딩 인디케이터
+$width: 4px;
+$height: 14px;
+$duration: 1500;
+$containerWidth: 130px;
+$transformOriginY: 170%;
+
+.loading{
+#activity {
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  background-color:rgba(0,0,0,0.8);
+  border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  font-family:Helvetica;
+  font-size:12px;
+  color:white;
+  margin: 0 auto;
+  width: $containerWidth;
+  height: $containerWidth;
+  z-index: 100;
+}
+.indicator {
+  transform:translateX(50%);
+  margin-left:-($width / 2);
+  height:70px;
+}
+@-webkit-keyframes throbber {
+    0% { background-color:white }
+    100% { background-color:#808080 }
+}
+
+@for $i from 0 through 11 {
+  #activity .segment:nth-child(#{$i + 1}) {
+    transform: rotate(#{30 * $i}deg);
+    animation-delay: #{$i * $duration/12}ms;
+  }
+}
+
+#activity .segment {
+  position: absolute;
+  height: $height;
+  width : $width;
+  background-color: rgba(234,234,234, .30);
+  border-radius: 10px;
+  -webkit-transform-origin-y: $transformOriginY;
+  animation-duration: #{$duration}ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: throbber;
+}
+}

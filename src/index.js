@@ -91,6 +91,7 @@ const drawCategory = async () => {
   });
   // 6. 템플릿을 문서에 삽입
   // root 엘리먼트에 삽입하지 않고 따로 nav 엘리먼트를 만든 이유는 카테고리 항목이 네비게이션 역할을 하기 때문에, 어떤 템플릿이 출력되어도 고정되어서 나타나야 하기 때문이다.
+  document.querySelector('.nav').textContent = '';
   document.querySelector('.nav').appendChild(frag);
   document.querySelector('.nav').style.display = 'flex';
 }
