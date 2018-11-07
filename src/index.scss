@@ -1,5 +1,35 @@
-$main-color: skyblue;
+$main-color: #23292d;
 
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html{
+  font-size:10px;
+}
 body {
+  color:#fff;
   background-color: $main-color;
+}
+body.loading::after{
+  height: 100vh;
+  width:100%;
+  content:"";
+  top:0;
+  left:0;
+  display: block;
+  position: fixed;
+  z-index: 10;
+  background-color: rgba(0,0,0,0.3);
+}
+
+.login-form{
+  width:400px;
+  margin: 100px auto;
+  input, button{
+    width:100%;
+    height: 25px;
+    margin-bottom: 5px;
+  }
 }

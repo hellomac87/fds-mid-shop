@@ -16,7 +16,7 @@ api.interceptors.request.use(function (config) {
 });
 
 const templates = {
-
+  loginTemplate: document.querySelector('#loginTemplate').content
 }
 
 const rootEl = document.querySelector('.root')
@@ -28,3 +28,19 @@ const rootEl = document.querySelector('.root')
 // 4. 내용 채우기
 // 5. 이벤트 리스너 등록하기
 // 6. 템플릿을 문서에 삽입
+
+// 로그인 폼 템플릿 그리기 함수
+const drawLoginTemplate = () => {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.loginTemplate, true);
+  // 2. 요소 선택
+  const loginFormEl = frag.querySelector('.login-form');
+  // 3. 필요한 데이터 불러오기
+  // 4. 내용 채우기
+  // 5. 이벤트 리스너 등록하기
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
+}
+
+drawLoginTemplate();
