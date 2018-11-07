@@ -170,6 +170,7 @@ const drawProductDetail = async (productId) => {
   const detailImagesEl = frag.querySelector('.product-detail-images');
   const amountInputEl = frag.querySelector('.amount');
   const totalPriceEl = frag.querySelector('.total-price');
+  const optionSelectEl = frag.querySelector('.options');
 
   // 3. 필요한 데이터 불러오기
   const { data: productData } = await api.get('/products/' + productId, {
@@ -196,13 +197,20 @@ const drawProductDetail = async (productId) => {
     // 6. 템플릿을 문서에 삽입
     detailImagesEl.appendChild(frag);
   }
+  totalPriceEl.textContent = (productData.options[0].price).toLocaleString();
+  optionSelectEl.querySelectorAll('option').forEach((item, index) => {
+    item.value = productData.options[index].id;
+    item.textContent = productData.options[index].title;
+  })
   // 5. 이벤트 리스너 등록하기
   // 수량 입력 항목 이벤트 리스너 ::
-  totalPriceEl.textContent = (productData.options[0].price).toLocaleString();
   amountInputEl.addEventListener('input', (e)=>{
     console.log(e.target.value);
     totalPriceEl.textContent = (e.target.value * productData.options[0].price).toLocaleString();
   });
+  optionSelectEl.addEventListener('change', (e) => {
+    console.log(e.target.value);
+  })
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
   rootEl.appendChild(frag);

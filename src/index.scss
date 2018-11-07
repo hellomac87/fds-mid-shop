@@ -54,6 +54,7 @@ body.loading::after{
     background-size:contain;
     background-position: center center;
     background-repeat: no-repeat;
+    cursor: pointer;
   }
 }
 .logo{
@@ -79,8 +80,8 @@ body.loading::after{
   left:0;
   width:100%;
   height: 30px;
-  background: #fff;
-  color:#000;
+  background: #000;
+  color:#fff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,6 +129,9 @@ body.loading::after{
   background-repeat: no-repeat;
   background-size: contain;
   list-style: none;
+}
+.option-wrap{
+  margin: 15px 0;
 }
 .cart-form{
   position: fixed;
