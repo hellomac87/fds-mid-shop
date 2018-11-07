@@ -1,6 +1,7 @@
 import '@babel/polyfill' // 이 라인을 지우지 말아주세요!
 
 import axios from 'axios'
+import { totalmem } from 'os';
 
 const api = axios.create({
   baseURL: process.env.API_URL
@@ -21,6 +22,8 @@ const templates = {
   productListItemTemp: document.querySelector('#productListItemTemp').content,
   categoryTemp: document.querySelector('#categoryTemp').content,
   categoryItemTemp: document.querySelector('#categoryItemTemp').content,
+  productDetailTemp: document.querySelector('#productDetailTemp').content,
+  pDetailImages: document.querySelector('#pDetailImages').content,
 }
 
 const rootEl = document.querySelector('.root')
@@ -139,6 +142,11 @@ const drawProductList = async (category) => {
     title.textContent = item.title;
     description.textContent = item.description;
     // 5. 이벤트 리스너 등록하기
+    // 이미지박스 이벤트 리스너 :: 클릭시 상세페이지 템플릿을 호출
+    imgBox.addEventListener('click', (e) => {
+      drawProductDetail(item.id);
+    });
+
     // 6. 템플릿을 문서에 삽입
     list.appendChild(frag);
 
@@ -150,6 +158,47 @@ const drawProductList = async (category) => {
   rootEl.appendChild(frag);
 }
 
+const drawProductDetail = async (productId) => {
+  console.log('drawProductDetail', productId);
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.productDetailTemp, true);
+  // 2. 요소 선택
+  const mainImgEl = frag.querySelector('.product-img');
+  const titleEl = frag.querySelector('.title');
+  const priceEl = frag.querySelector('.price');
+  const descriptionEl = frag.querySelector('.description');
+  const detailImagesEl = frag.querySelector('.product-detail-images');
+
+  // 3. 필요한 데이터 불러오기
+  const { data: productData } = await api.get('/products/' + productId, {
+    params: {
+      _embed : "options"
+    }
+  });
+  console.log(productData);
+
+  // 4. 내용 채우기
+  mainImgEl.style.backgroundImage = `url(${productData.mainImgUrl})`; // img
+  titleEl.textContent = productData.title;
+  priceEl.textContent = productData.options[0].price;
+  descriptionEl.textContent = productData.description;
+  for (const imgUrl of productData.detailImgUrls){
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.pDetailImages, true);
+    // 2. 요소 선택
+    const imgTag = frag.querySelector('.img');
+    // 3. 필요한 데이터 불러오기
+    // 4. 내용 채우기
+    imgTag.setAttribute('src', imgUrl);
+    // 5. 이벤트 리스너 등록하기
+    // 6. 템플릿을 문서에 삽입
+    detailImagesEl.appendChild(frag);
+  }
+  // 5. 이벤트 리스너 등록하기
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
+}
 // 첫 접근시
 if (localStorage.getItem('token')){
   // 토큰이 존재하면 바로 상품 리스트 템플릿을 그려준다.

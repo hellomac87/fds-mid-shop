@@ -58,6 +58,48 @@
   </template>
   <!-- 끝 :: 카테고리 아이템 템플릿 :: -->
 
+  <!-- 시작 :: 상세페이지 템플릿 :: -->
+  <template id="productDetailTemp">
+    <ul class="product-detail-wrap">
+      <div class="product-img"></div>
+      <div class="product-info">
+        <div class="title-wrap">
+          title : <span class="title">title</span>
+        </div>
+        <div class="price-wrap">
+          price : <span class="price"></span>
+        </div>
+        <div class="description-wrap">
+          description : <span class="description">description</span>
+        </div>
+
+      </div>
+      <form class="cart-form">
+        <p>
+          amount : <input type="number">
+        </p>
+        <p>
+          total price : <span class="total-price">0</span> won
+        </p>
+        <button>add to cart</button>
+      </form>
+      <ul class="product-detail-images">
+        <h1>product detail</h1>
+      </ul>
+    </div>
+  </template>
+  <!-- 끝 :: 상세페이지 템플릿 :: -->
+
+  <!-- 시작 :: 상세페이지 상세이미지 템플릿 :: -->
+  <template id="pDetailImages">
+    <li class="">
+      <img class="img" alt="asdf"/>
+    </li>
+  </template>
+  <!-- 끝 :: 상세페이지 상세이미지 템플릿 :: -->
+
+
+
   <div class="root"></div>
 
   <script src="./index.js"></script>

@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": 3,
       "category": "iphone",
       "title": "iphoneXS",
       "description": "iphoneXS",
@@ -142,9 +142,9 @@
     },
     {
       "id": 9,
-      "productId": 4,
+      "productId": 5,
       "title": "black",
-      "price": 2000000
+      "price": 3000000
     },
     {
       "id": 10,
@@ -154,9 +154,9 @@
     },
     {
       "id": 11,
-      "productId": 5,
+      "productId": 6,
       "title": "white",
-      "price": 3000000
+      "price": 4000000
     },
     {
       "id": 12,
@@ -166,9 +166,9 @@
     },
     {
       "id": 13,
-      "productId": 6,
+      "productId": 7,
       "title": "white",
-      "price": 4000000
+      "price": 500000
     },
     {
       "id": 14,
@@ -178,7 +178,7 @@
     },
     {
       "id": 15,
-      "productId": 7,
+      "productId": 8,
       "title": "white",
       "price": 500000
     },
@@ -186,12 +186,6 @@
       "id": 17,
       "productId": 8,
       "title": "pink",
-      "price": 500000
-    },
-    {
-      "id": 18,
-      "productId": 8,
-      "title": "white",
       "price": 500000
     }
   ],
