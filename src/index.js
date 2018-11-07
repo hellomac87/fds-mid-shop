@@ -24,6 +24,8 @@ const templates = {
   categoryItemTemp: document.querySelector('#categoryItemTemp').content,
   productDetailTemp: document.querySelector('#productDetailTemp').content,
   pDetailImages: document.querySelector('#pDetailImages').content,
+  cartListTemp: document.querySelector('#cartList').content,
+  cartListItemTemp: document.querySelector('#cartListItem').content,
 }
 
 const rootEl = document.querySelector('.root')
@@ -171,6 +173,7 @@ const drawProductDetail = async (productId) => {
   const amountInputEl = frag.querySelector('.amount');
   const totalPriceEl = frag.querySelector('.total-price');
   const optionSelectEl = frag.querySelector('.options');
+  const cartFormEl = frag.querySelector('.cart-form');
 
   // 3. 필요한 데이터 불러오기
   const { data: productData } = await api.get('/products/' + productId, {
@@ -218,17 +221,89 @@ const drawProductDetail = async (productId) => {
     priceEl.textContent = productData.options[index].price.toLocaleString();
     totalPriceEl.textContent = productData.options[index].price.toLocaleString();
     // 옵션의 value 에 따라 amount 값 초기화 및 가격 변경
+  });
+  // 카트 폼 서브밋 이벤트 리스너
+  cartFormEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    // 장바구니 요청에서 필요한 데이터셋 :: 옵션, 수량
+    const quantity = e.target.elements.cartamount.value;
+    const option = optionSelectEl.value;
+    console.log('quantity: ', quantity);
+    console.log('option: ', option);
+
+    // 장바구니 호출
+    drawCartTemp();
   })
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
   rootEl.appendChild(frag);
 }
+
+// 장바구니 템플릿 그리는 함수
+const drawCartTemp = async() => {
+  // 1. 템플릿 복사
+  // 장바구니 리스트(ul + div) 복사
+  const frag = document.importNode(templates.cartListTemp, true);
+  // 2. 요소 선택
+  // cart-list(ul) 선택
+  const cartListEl = frag.querySelector('.cart-list');
+  // 3. 필요한 데이터 불러오기
+  // 내 장바구니에서 주문되지 않는 상품 정보 가져오기
+  const { data } = await api.get('/cartItems', {
+    params: {
+      orderId: -1
+    }
+  });
+
+  // 잎사 여창힌 카트 아이템들의 정보를 이용해서 다른 속성들을 불러오는 요청을 한다.
+  const params = new URLSearchParams(); // 객체 추가
+  data.forEach(c => params.append('id', c.optionId))
+  params.append('_expand', 'product')
+
+  const { data: cartDatas } = await api.get('/options', {
+    params
+  });
+  console.log('cartdata: ', data);
+  console.log('cartOptionData: ', cartDatas);
+  // 4. 내용 채우기
+  cartDatas.forEach((cartItem, index) => {
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.cartListItemTemp, true);
+
+    // 2. 요소 선택
+    const imgEl = frag.querySelector('.img');
+    const titleEl = frag.querySelector('.title');
+    const pirceEl = frag.querySelector('.price-piece');
+    const quantityEl = frag.querySelector('.quantity');
+    const totalPriceEl = frag.querySelector('.total-price');
+    const productInfoEl = frag.querySelector('.product-info');
+    // 3. 필요한 데이터 불러오기
+
+    // 4. 내용 채우기
+    imgEl.setAttribute('src', cartItem.product.mainImgUrl);
+    titleEl.textContent = cartItem.product.title;
+    pirceEl.textContent = cartItem.price;
+    quantityEl.textContent = data[index].quantity;
+    totalPriceEl.textContent = (data[index].quantity * cartItem.price).toLocaleString();
+    productInfoEl.textContent = cartItem.product.title;
+    // 5. 이벤트 리스너 등록하기
+
+    // 6. 템플릿을 문서에 삽입
+    cartListEl.appendChild(frag);
+  });
+
+  // 5. 이벤트 리스너 등록하기
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
+}
+
+
 // 첫 접근시
 if (localStorage.getItem('token')){
   // 토큰이 존재하면 바로 상품 리스트 템플릿을 그려준다.
   drawProductList();
   drawCategory();// 로그인 후 처음 실행시 함수가 실행되지 않음
-
 }else{
   // 토큰이 존재하지 않으면 로그임 템플릿을 그려준다.
   drawLoginForm();

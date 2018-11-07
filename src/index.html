@@ -82,7 +82,7 @@
       </div>
       <form class="cart-form">
         <p>
-          amount : <input class="amount" type="number" value="1">
+          amount : <input class="amount" type="number" value="1" name="cartamount">
         </p>
         <p>
           total price : <span class="total-price">0</span> won
@@ -104,7 +104,48 @@
   </template>
   <!-- 끝 :: 상세페이지 상세이미지 템플릿 :: -->
 
+  <!-- 시작 :: 장바구니 템플릿 :: -->
+  <template id="cartList">
+    <ul class="cart-list"></ul>
+    <div class="cart-total-info">
+      <div class="total-price">장바구니 전체 가격</div>
+      <div class="checked-price">체크된 리스트 가격</div>
+    </div>
+  </template>
+  <!-- 끝 :: 장바구니 템플릿 :: -->
 
+  <!-- 시작 :: 장바구니 아이템 템플릿 :: -->
+  <template id="cartListItem">
+    <li class="cart-list-item">
+      <input type="checkbox" class="checkbox"/>
+      <div class="img-wrap">
+        img
+        <img class="img"/>
+      </div>
+      <div class="info-wrap">
+        <div class="order-info">
+          <h3 class="title">title</h3>
+          <div class="price-piece-wrap">
+            <span class="price-piece">개당가격</span> won
+          </div>
+          <div class="quantity-wrap">
+            수량: <span class="quantity"></span>
+          </div>
+
+          <div class="total-price-wrap">
+            <span class="total-price">총 가격</span> won
+          </div>
+        </div>
+        <div class="btn-wrap">
+          <button>삭제</button>
+        </div>
+        <div class="product-info">
+          제품 정보
+        </div>
+      </div>
+    </li>
+  </template>
+  <!-- 끝 :: 장바구니 아이템 템플릿 :: -->
 
   <div class="root"></div>
 

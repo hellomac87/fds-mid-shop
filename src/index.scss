@@ -144,3 +144,24 @@ body.loading::after{
   justify-content: space-around;
   align-items: center;
 }
+
+.cart-list-item{
+  display: flex;
+  justify-content: flex-start;
+  .checkbox{
+    width:10%;
+  }
+  .img-wrap{
+    width:20%;
+    .img{
+      width:100%;
+    }
+  }
+
+  .info-wrap{
+    width:70%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+}
