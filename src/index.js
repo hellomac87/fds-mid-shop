@@ -71,4 +71,12 @@ const drawProductList = () => {
   rootEl.appendChild(frag);
 }
 
-drawLoginForm();
+// 첫 접근시
+if (localStorage.getItem('token')){
+  // 토큰이 존재하면 바로 상품 리스트 템플릿을 그려준다.
+  drawProductList()
+}else{
+  // 토큰이 존재하지 않으면 로그임 템플릿을 그려준다.
+  drawLoginForm();
+}
+
