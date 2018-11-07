@@ -16,8 +16,9 @@ api.interceptors.request.use(function (config) {
 });
 
 const templates = {
-  loginTemplate: document.querySelector('#loginTemplate').content,
-  productListTemplate: document.querySelector('#productListTemplate').content
+  loginTemplate: document.querySelector('#loginTemp').content,
+  productListTemplate: document.querySelector('#productListTemp').content,
+  productListItemTemp: document.querySelector('#productListItemTemp').content
 }
 
 const rootEl = document.querySelector('.root')
@@ -58,13 +59,32 @@ const drawLoginForm = () => {
 }
 
 // 상품 리스트 템플릿 그리기 함수
-const drawProductList = () => {
+const drawProductList = async () => {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.productListTemplate, true);
   // 2. 요소 선택
-
+  const list = frag.querySelector('.product-list');
   // 3. 필요한 데이터 불러오기
+  // 포스트 api 요청
+  const { data: productList } = await api.get('/products');
+  console.log(productList);
   // 4. 내용 채우기
+  productList.forEach(item => {
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.productListItemTemp, true);
+    // 2. 요소 선택
+    const imgBox = frag.querySelector('.img-wrap');
+    const title = frag.querySelector('.title');
+    const description = frag.querySelector('.description');
+    // 3. 필요한 데이터 불러오기
+    // 4. 내용 채우기
+    imgBox.style.backgroundImage = `url(${item.mainImgUrl})`;
+    title.textContent = item.title;
+    description.textContent = item.description;
+    // 5. 이벤트 리스너 등록하기
+    // 6. 템플릿을 문서에 삽입
+    list.appendChild(frag);
+  });
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
