@@ -23,7 +23,9 @@ body.loading::after{
   z-index: 10;
   background-color: rgba(0,0,0,0.3);
 }
-
+.root{
+  margin-top: 50px;
+}
 .login-form{
   width:400px;
   margin: 100px auto;
@@ -53,5 +55,30 @@ body.loading::after{
     background-position: center center;
     background-repeat: no-repeat;
   }
+}
+
+.nav{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height: 30px;
+  background: #fff;
+  color:#000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+
+  .categories{
+    display: flex;
+    justify-content: center;
+    .categoriItem{
+      list-style: none;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+  }
+
 }
 
