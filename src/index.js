@@ -199,7 +199,7 @@ const drawProductDetail = async (productId) => {
   }
   totalPriceEl.textContent = (productData.options[0].price).toLocaleString();
   optionSelectEl.querySelectorAll('option').forEach((item, index) => {
-    item.value = productData.options[index].id;
+    item.value = index + 1;
     item.textContent = productData.options[index].title;
   })
   // 5. 이벤트 리스너 등록하기
@@ -214,7 +214,7 @@ const drawProductDetail = async (productId) => {
     // 옵션의 value 에 따라 메인 이미지 변경
     const index = e.target.value - 1;
     mainImgEl.style.backgroundImage = `url(${productData.detailImgUrls[index]})`;
-
+    priceEl.textContent = productData.options[index].price;
     // 옵션의 value 에 따라 amount 값 초기화 및 가격 변경
   })
   // 6. 템플릿을 문서에 삽입
