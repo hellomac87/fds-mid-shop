@@ -173,7 +173,11 @@ $height: 14px;
 $duration: 1500;
 $containerWidth: 130px;
 $transformOriginY: 170%;
-
+#activity{
+  .text{
+    display: none;
+  }
+}
 .loading{
 #activity {
   position: absolute;
@@ -194,10 +198,13 @@ $transformOriginY: 170%;
   width: $containerWidth;
   height: $containerWidth;
   z-index: 100;
+  .text{
+    display: block;
+  }
 }
 .indicator {
   transform:translateX(50%);
-  margin-left:-($width / 2);
+  // margin-left:-($width / 2);
   height:70px;
 }
 @-webkit-keyframes throbber {
