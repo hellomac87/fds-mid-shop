@@ -16,7 +16,8 @@ api.interceptors.request.use(function (config) {
 });
 
 const templates = {
-  loginTemplate: document.querySelector('#loginTemplate').content
+  loginTemplate: document.querySelector('#loginTemplate').content,
+  productListTemplate: document.querySelector('#productListTemplate').content
 }
 
 const rootEl = document.querySelector('.root')
@@ -30,11 +31,38 @@ const rootEl = document.querySelector('.root')
 // 6. 템플릿을 문서에 삽입
 
 // 로그인 폼 템플릿 그리기 함수
-const drawLoginTemplate = () => {
+const drawLoginForm = () => {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.loginTemplate, true);
   // 2. 요소 선택
   const loginFormEl = frag.querySelector('.login-form');
+  // 3. 필요한 데이터 불러오기
+  // 4. 내용 채우기
+  // 5. 이벤트 리스너 등록하기
+  // 로그인 api 요청
+  loginFormEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = e.target.elements.username.value;
+    const password = e.target.elements.password.value;
+    const res = await api.post('/users/login',{
+      username,
+      password
+    });
+    // 응답 성공시
+    localStorage.setItem('token', res.data.token); // 로컬스토리지에 토큰 저장
+    drawProductList();
+  });
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
+}
+
+// 상품 리스트 템플릿 그리기 함수
+const drawProductList = () => {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.productListTemplate, true);
+  // 2. 요소 선택
+
   // 3. 필요한 데이터 불러오기
   // 4. 내용 채우기
   // 5. 이벤트 리스너 등록하기
@@ -43,4 +71,4 @@ const drawLoginTemplate = () => {
   rootEl.appendChild(frag);
 }
 
-drawLoginTemplate();
+drawLoginForm();
