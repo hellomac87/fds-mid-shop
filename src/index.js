@@ -1,19 +1,31 @@
 import '@babel/polyfill' // 이 라인을 지우지 말아주세요!
 
 import axios from 'axios'
-import { totalmem } from 'os';
+// import { totalmem } from 'os';
 
 const api = axios.create({
   baseURL: process.env.API_URL
 })
 
+// axios request interceptors
 api.interceptors.request.use(function (config) {
+  // indicator show
+  document.body.classList.add('loading');
   const token = localStorage.getItem('token')
   if (token) {
     config.headers = config.headers || {}
     config.headers['Authorization'] = 'Bearer ' + token
   }
   return config
+});
+
+// axios response interceptors
+api.interceptors.response.use(function (response) {
+  // indicator hide
+  document.body.classList.remove('loading');
+  return response;
+}, function (error) {
+  return Promise.reject(error);
 });
 
 const templates = {
