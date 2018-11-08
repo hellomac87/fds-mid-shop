@@ -241,10 +241,19 @@ const drawProductDetail = async (productId) => {
   cartFormEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     // 장바구니 요청에서 필요한 데이터셋 :: 옵션, 수량
-    const quantity = e.target.elements.cartamount.value;
-    const option = optionSelectEl.value;
-    console.log('quantity: ', quantity);
-    console.log('option: ', option);
+    const quantity = parseInt(e.target.elements.cartamount.value);
+    const option = parseInt(optionSelectEl.value);
+    console.log({
+      quantity,
+      option,
+      productId
+    });
+    // await api.post('/cartItems', {
+    //   optionId: option,
+    //   quantity: quantity,
+    //   orderId: -1,
+    //   productId
+    // });
 
     // 장바구니 호출
     drawCartTemp();
@@ -263,49 +272,14 @@ const drawCartTemp = async() => {
   // cart-list(ul) 선택
   const cartListEl = frag.querySelector('.cart-list');
   // 3. 필요한 데이터 불러오기
-  // 내 장바구니에서 주문되지 않는 상품 정보 가져오기
+  // 내 장바구니에서 현재 사용자의 주문되지 않는 상품 정보 가져오기
   const { data } = await api.get('/cartItems', {
     params: {
       orderId: -1
     }
   });
-
-  // 잎사 여창힌 카트 아이템들의 정보를 이용해서 다른 속성들을 불러오는 요청을 한다.
-  const params = new URLSearchParams(); // 객체 추가
-  data.forEach(c => params.append('id', c.optionId))
-  params.append('_expand', 'product')
-
-  const { data: cartDatas } = await api.get('/options', {
-    params
-  });
-  console.log('cartdata: ', data);
-  console.log('cartOptionData: ', cartDatas);
-  // 4. 내용 채우기
-  cartDatas.forEach((cartItem, index) => {
-    // 1. 템플릿 복사
-    const frag = document.importNode(templates.cartListItemTemp, true);
-
-    // 2. 요소 선택
-    const imgEl = frag.querySelector('.img');
-    const titleEl = frag.querySelector('.title');
-    const pirceEl = frag.querySelector('.price-piece');
-    const quantityEl = frag.querySelector('.quantity');
-    const totalPriceEl = frag.querySelector('.total-price');
-    const productInfoEl = frag.querySelector('.product-info');
-    // 3. 필요한 데이터 불러오기
-
-    // 4. 내용 채우기
-    imgEl.setAttribute('src', cartItem.product.mainImgUrl);
-    titleEl.textContent = cartItem.product.title;
-    pirceEl.textContent = cartItem.price;
-    quantityEl.textContent = data[index].quantity;
-    totalPriceEl.textContent = (data[index].quantity * cartItem.price).toLocaleString();
-    productInfoEl.textContent = cartItem.product.title;
-    // 5. 이벤트 리스너 등록하기
-
-    // 6. 템플릿을 문서에 삽입
-    cartListEl.appendChild(frag);
-  });
+  console.log('주문되지 않은 모든 카트 데이터', data)
+  // 주문되지 않은 '현재 사용자의' 카트의 정보의 productId 설정을를 이용해서 다른 속성들을 불러오는 요청을 한다.
 
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
