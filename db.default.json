@@ -203,13 +203,14 @@
       "userId": 2,
       "optionId": 1,
       "quantity": 2,
-      "orderId": -1
+      "ordered": false
     },
     {
       "id": 2,
       "userId": 2,
       "optionId": 2,
       "quantity": 3,
+      "ordered": true,
       "orderId": 1
     }
   ],

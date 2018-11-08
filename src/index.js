@@ -117,6 +117,7 @@ const drawLoginForm = () => {
     });
     // 응답 성공시
     localStorage.setItem('token', res.data.token); // 로컬스토리지에 토큰 저장
+    drawCategory();
     drawProductList();
   });
   // 6. 템플릿을 문서에 삽입
@@ -247,11 +248,11 @@ const drawProductDetail = async (productId) => {
       quantity,
       option
     });
-    // await api.post('/cartItems', {
-    //   optionId: option,
-    //   quantity: quantity,
-    //   orderId: -1,
-    // });
+    await api.post('/cartItems', {
+      ordered: false,
+      quantity: quantity,
+      optionId:option
+    });
 
     // 장바구니 호출
     drawCartTemp();
@@ -271,14 +272,22 @@ const drawCartTemp = async() => {
   const cartListEl = frag.querySelector('.cart-list');
   // 3. 필요한 데이터 불러오기
   // 내 장바구니에서 현재 사용자의 주문되지 않는 상품 정보 가져오기
-  const { data } = await api.get('/cartItems', {
+  const { data: cartItems } = await api.get('/cartItems', {
     params: {
-      orderId: -1
+      ordered: false,
+      _expand: 'option'
     }
   });
-  console.log('주문되지 않은 모든 카트 데이터', data)
+  console.log('장바구니 데이터', cartItems)
   // 주문되지 않은 '현재 사용자의' 카트의 정보의 productId 설정을를 이용해서 다른 속성들을 불러오는 요청을 한다.
+  // const params = new URLSearchParams()
+  // cartItems.forEach(c => params.append('id', c.option.productId))
 
+  // const { data: options } = await api.get('/products', {
+  //   params
+  // })
+
+  // console.log('장바구니 데이터 + 옵션데이터', options);
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
