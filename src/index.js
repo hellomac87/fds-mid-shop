@@ -245,14 +245,12 @@ const drawProductDetail = async (productId) => {
     const option = parseInt(optionSelectEl.value);
     console.log({
       quantity,
-      option,
-      productId
+      option
     });
     // await api.post('/cartItems', {
     //   optionId: option,
     //   quantity: quantity,
     //   orderId: -1,
-    //   productId
     // });
 
     // 장바구니 호출
