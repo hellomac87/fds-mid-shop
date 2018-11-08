@@ -218,7 +218,7 @@ const drawProductDetail = async (productId) => {
   totalPriceEl.textContent = (productData.options[0].price).toLocaleString(); // 총합 가격 초기값 넣기
   // 옵션 value, text 초기값 그리기
   optionSelectEl.querySelectorAll('option').forEach((item, index) => {
-    item.value = index + 1;
+    item.value = productData.options[index].id;
     item.textContent = productData.options[index].title;
   });
 
@@ -248,11 +248,11 @@ const drawProductDetail = async (productId) => {
       quantity,
       option
     });
-    await api.post('/cartItems', {
-      ordered: false,
-      quantity: quantity,
-      optionId:option
-    });
+    // await api.post('/cartItems', {
+    //   ordered: false,
+    //   quantity: quantity,
+    //   optionId:option
+    // });
 
     // 장바구니 호출
     drawCartTemp();
@@ -280,14 +280,38 @@ const drawCartTemp = async() => {
   });
   console.log('장바구니 데이터', cartItems)
   // 주문되지 않은 '현재 사용자의' 카트의 정보의 productId 설정을를 이용해서 다른 속성들을 불러오는 요청을 한다.
-  // const params = new URLSearchParams()
-  // cartItems.forEach(c => params.append('id', c.option.productId))
+  const params = new URLSearchParams();
+  cartItems.forEach(c => params.append('id', c.option.productId))
 
-  // const { data: options } = await api.get('/products', {
-  //   params
-  // })
+  const { data: options } = await api.get('/products', {
+    params
+  })
 
-  // console.log('장바구니 데이터 + 옵션데이터', options);
+  console.log('장바구니 데이터 + 옵션데이터', options);
+  // 4. 내용 채우기
+  options.forEach((item, index) => {
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.cartListItemTemp, true);
+    // 2. 요소 선택
+    const imgEl = frag.querySelector('.img');
+    const titleEl = frag.querySelector('.title');
+    const pirceEl = frag.querySelector('.price-piece');
+    const quantityEl = frag.querySelector('.quantity');
+    const totalPriceEl = frag.querySelector('.total-price');
+    const productInfoEl = frag.querySelector('.product-info');
+    // 3. 필요한 데이터 불러오기
+    // 4. 내용 채우기
+    imgEl.setAttribute('src', item.mainImgUrl);
+    titleEl.textContent = item.title;
+    pirceEl.textContent = cartItems[index].option.price;
+    quantityEl.textContent = cartItems[index].quantity;
+    totalPriceEl.textContent = (cartItems[index].option.price * cartItems[index].quantity).toLocaleString();
+    productInfoEl.textContent = item.description;
+    // 5. 이벤트 리스너 등록하기
+    // 6. 템플릿을 문서에 삽입
+    cartListEl.appendChild(frag);
+
+  });
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
