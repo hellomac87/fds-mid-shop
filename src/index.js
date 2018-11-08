@@ -354,13 +354,19 @@ const drawCartTemp = async() => {
       params
     });
 
-    console.log(asdf);
-    for(const item of asdf){
-      await api.patch('/cartItems/'+ item.id,{
+    const ps = asdf.map(item => {
+      api.patch('/cartItems/' + item.id, {
         ordered: true,
         orderId
       });
-    }
+    });
+    await Promise.all(ps);
+    // for(const item of asdf){
+    //   await api.patch('/cartItems/'+ item.id,{
+    //     ordered: true,
+    //     orderId
+    //   });
+    // }
     // 주문 api 요청하기
 
     // 주문리스트 템플릿 그리기
