@@ -314,7 +314,8 @@ const drawCartTemp = async() => {
     // 5. 이벤트 리스너 등록하기
     // 삭제 버튼 이벤트 리스너
     deleteEl.addEventListener('click', async (e) => {
-
+      await api.delete('/cartItems/' + item.id);
+      drawCartTemp();
     })
     // 6. 템플릿을 문서에 삽입
     cartListEl.appendChild(frag);
