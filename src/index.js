@@ -198,9 +198,10 @@ const drawProductDetail = async (productId) => {
 
   // 4. 내용 채우기
   mainImgEl.style.backgroundImage = `url(${productData.mainImgUrl})`; // img
-  titleEl.textContent = productData.title;
-  priceEl.textContent = productData.options[0].price.toLocaleString();
-  descriptionEl.textContent = productData.description;
+  titleEl.textContent = productData.title; // title 정보 넣기
+  priceEl.textContent = productData.options[0].price.toLocaleString(); // 가격 정보 넣기, 옵션의 첫번째 가격으로 설정
+  descriptionEl.textContent = productData.description; // 설명 넣기
+  // 상세 이미지 배열 넣기
   for (const imgUrl of productData.detailImgUrls){
     // 1. 템플릿 복사
     const frag = document.importNode(templates.pDetailImages, true);
@@ -213,15 +214,16 @@ const drawProductDetail = async (productId) => {
     // 6. 템플릿을 문서에 삽입
     detailImagesEl.appendChild(frag);
   }
-  totalPriceEl.textContent = (productData.options[0].price).toLocaleString();
+  totalPriceEl.textContent = (productData.options[0].price).toLocaleString(); // 총합 가격 초기값 넣기
+  // 옵션 value, text 초기값 그리기
   optionSelectEl.querySelectorAll('option').forEach((item, index) => {
     item.value = index + 1;
     item.textContent = productData.options[index].title;
-  })
+  });
+
   // 5. 이벤트 리스너 등록하기
   // 수량 입력 항목 이벤트 리스너 ::
   amountInputEl.addEventListener('input', (e)=>{
-    console.log(e.target.value);
     totalPriceEl.textContent = (e.target.value * productData.options[optionSelectEl.value - 1].price).toLocaleString();
   });
   // 옵션 변경 이벤트 리스너
