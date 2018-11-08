@@ -38,6 +38,8 @@ const templates = {
   pDetailImages: document.querySelector('#pDetailImages').content,
   cartListTemp: document.querySelector('#cartList').content,
   cartListItemTemp: document.querySelector('#cartListItem').content,
+  orderListTemp: document.querySelector('#orderListTemp').content,
+  orderListItemTemp: document.querySelector('#orderListItemTemp').content,
 }
 
 const rootEl = document.querySelector('.root')
@@ -271,6 +273,9 @@ const drawCartTemp = async() => {
   // 2. 요소 선택
   // cart-list(ul) 선택
   const cartListEl = frag.querySelector('.cart-list');
+  const totalPriceOrderEl = frag.querySelector('.total-price');
+  const checkedPriceEl = frag.querySelector('.checked-price');
+  const orderBtnEl = frag.querySelector('.order-btn');
   // 3. 필요한 데이터 불러오기
   // 내 장바구니에서 현재 사용자의 주문되지 않는 상품 정보 가져오기
   const { data: cartItems } = await api.get('/cartItems', {
@@ -290,6 +295,7 @@ const drawCartTemp = async() => {
 
   console.log('장바구니 데이터 + 옵션데이터', options);
   // 4. 내용 채우기
+  let sumNum = 0; // 합계금액 저장용 변수
   cartItems.forEach((item, index) => {
     // 1. 템플릿 복사
     const frag = document.importNode(templates.cartListItemTemp, true);
@@ -301,16 +307,20 @@ const drawCartTemp = async() => {
     const totalPriceEl = frag.querySelector('.total-price');
     const productInfoEl = frag.querySelector('.product-info');
     const deleteEl = frag.querySelector('.delete');
+
     // 3. 필요한 데이터 불러오기
+    // console.log()
+
     // 4. 내용 채우기
     const product = options.find(x => x.id === item.option.productId)
-    console.log(product);
+    // console.log(product);
     imgEl.setAttribute('src',product.mainImgUrl);
     titleEl.textContent = product.title;
     pirceEl.textContent = (item.option.price).toLocaleString();
     quantityEl.value = item.quantity;
     totalPriceEl.textContent = (item.option.price * item.quantity).toLocaleString();
     productInfoEl.textContent = product.description;
+    sumNum += item.option.price * item.quantity;
     // 5. 이벤트 리스너 등록하기
     // 삭제 버튼 이벤트 리스너
     deleteEl.addEventListener('click', async (e) => {
@@ -321,12 +331,81 @@ const drawCartTemp = async() => {
     cartListEl.appendChild(frag);
 
   });
-  // 5. 이벤트 리스너 등록하기
+  totalPriceOrderEl.textContent = sumNum.toLocaleString();
 
+  // checkedPriceEl
+
+  // 5. 이벤트 리스너 등록하기
+  orderBtnEl.addEventListener('click', async (e) => {
+    e.preventDefault();
+    // 여기에서 주문 처리를 해주어야 한다.
+    // 주문 객체 만들기
+    // '주문' 객체를 먼저 만들고 나서
+    const { data: { id: orderId } } = await api.post('/orders', {
+      orderTime: Date.now() // 현재 시각을 나타내는 정수
+    });
+
+    // 위에서 만든 주문 객체의 id를 장바구니 항목의 orderId에 넣어줍니다.
+    const params = new URLSearchParams();
+    cartItems.forEach(c => params.append('id', c.id))
+
+    // 주문 :: 이라는 행위는 장바구니 데이터의 ordered 를 true 로 patch 하는 행위이다.
+    const {data: asdf} = await api.get('/cartItems/', {
+      params
+    });
+
+    console.log(asdf);
+    for(const item of asdf){
+      await api.patch('/cartItems/'+ item.id,{
+        ordered: true,
+        orderId
+      });
+    }
+    // 주문 api 요청하기
+
+    // 주문리스트 템플릿 그리기
+    // drawCartTemp();
+    drawOrderList(orderId); // orderId 를 인자로 넣어줘서 주문내역 api 호출시 사용 할 수 있도록 한다.
+  })
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
   rootEl.appendChild(frag);
 }
+
+const drawOrderList = async (orderId) => {
+  console.log('drawOrderList');
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.orderListTemp,true);
+  // 2. 요소 선택
+  const orderLitsEl = frag.querySelector('.order-list');
+  // 3. 필요한 데이터 불러오기
+  const { data: { cartItems } } = await api.get('/orders/' + orderId, {
+    params: {
+      _embed: 'cartItems'
+    }
+  });
+  console.log(cartItems)
+  const params = new URLSearchParams()
+  cartItems.forEach(c => params.append('id', c.optionId))
+  params.append('_expand', 'product')
+
+  const { data: options } = await api.get('/options', {
+    params
+  })
+
+  console.log(JSON.stringify(options));
+  // 4. 내용 채우기
+  // 5. 이벤트 리스너 등록하기
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
+}
+
+
+// 개발용 버튼
+document.querySelector('.cart-short-cut').addEventListener('click', async(e)=>{
+  drawCartTemp();
+})
 
 
 // 첫 접근시
