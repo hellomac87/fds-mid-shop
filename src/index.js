@@ -224,7 +224,6 @@ const drawProductDetail = async (productId) => {
   // 5. 이벤트 리스너 등록하기
   // 수량 입력 항목 이벤트 리스너 ::
   amountInputEl.addEventListener('input', (e)=>{
-    console.log(e.target.value);
     const value = parseInt(e.target.value);
     const price = parseInt(priceEl.textContent.split(',').join(''));
 
@@ -291,7 +290,7 @@ const drawCartTemp = async() => {
 
   console.log('장바구니 데이터 + 옵션데이터', options);
   // 4. 내용 채우기
-  options.forEach((item, index) => {
+  cartItems.forEach((item, index) => {
     // 1. 템플릿 복사
     const frag = document.importNode(templates.cartListItemTemp, true);
     // 2. 요소 선택
@@ -304,16 +303,18 @@ const drawCartTemp = async() => {
     const deleteEl = frag.querySelector('.delete');
     // 3. 필요한 데이터 불러오기
     // 4. 내용 채우기
-    imgEl.setAttribute('src', item.mainImgUrl);
-    titleEl.textContent = item.title;
-    pirceEl.textContent = cartItems[index].option.price.toLocaleString();
-    quantityEl.value = cartItems[index].quantity;
-    totalPriceEl.textContent = (cartItems[index].option.price * cartItems[index].quantity).toLocaleString();
-    productInfoEl.textContent = item.description;
+    const product = options.find(x => x.id === item.option.productId)
+    console.log(product);
+    imgEl.setAttribute('src',product.mainImgUrl);
+    titleEl.textContent = product.title;
+    pirceEl.textContent = (item.option.price).toLocaleString();
+    quantityEl.value = item.quantity;
+    totalPriceEl.textContent = (item.option.price * item.quantity).toLocaleString();
+    productInfoEl.textContent = product.description;
     // 5. 이벤트 리스너 등록하기
     // 삭제 버튼 이벤트 리스너
     deleteEl.addEventListener('click', async (e) => {
-      console.log('delete plz');
+
     })
     // 6. 템플릿을 문서에 삽입
     cartListEl.appendChild(frag);
