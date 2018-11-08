@@ -225,6 +225,10 @@ const drawProductDetail = async (productId) => {
   // 수량 입력 항목 이벤트 리스너 ::
   amountInputEl.addEventListener('input', (e)=>{
     console.log(e.target.value);
+    const value = parseInt(e.target.value);
+    const price = parseInt(priceEl.textContent.split(',').join(''));
+
+    totalPriceEl.textContent = (value * price).toLocaleString();
   });
   // 옵션 변경 이벤트 리스너
   optionSelectEl.addEventListener('change', (e) => {
