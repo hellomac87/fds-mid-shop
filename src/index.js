@@ -228,10 +228,10 @@ const drawProductDetail = async (productId) => {
   });
   // 옵션 변경 이벤트 리스너
   optionSelectEl.addEventListener('change', (e) => {
-    console.log(e.target.value);
     productData.options.forEach(item => {
-      console.log(item.id)
       if(item.id === parseInt(e.target.value)){
+        amountInputEl.value = 1; // 수량 초기화
+        priceEl.textContent = item.price.toLocaleString();
         totalPriceEl.textContent = item.price.toLocaleString();
       };
     });
