@@ -221,38 +221,36 @@ const drawProductDetail = async (productId) => {
     item.value = productData.options[index].id;
     item.textContent = productData.options[index].title;
   });
-
   // 5. 이벤트 리스너 등록하기
   // 수량 입력 항목 이벤트 리스너 ::
   amountInputEl.addEventListener('input', (e)=>{
-    totalPriceEl.textContent = (e.target.value * productData.options[optionSelectEl.value - 1].price).toLocaleString();
+    console.log(e.target.value);
   });
   // 옵션 변경 이벤트 리스너
   optionSelectEl.addEventListener('change', (e) => {
     console.log(e.target.value);
-    // 옵션의 value 에 따라 메인 이미지 변경
-    const index = e.target.value - 1;
-    amountInputEl.value = 1;
-    mainImgEl.style.backgroundImage = `url(${productData.detailImgUrls[index]})`;
-    priceEl.textContent = productData.options[index].price.toLocaleString();
-    totalPriceEl.textContent = productData.options[index].price.toLocaleString();
-    // 옵션의 value 에 따라 amount 값 초기화 및 가격 변경
+    productData.options.forEach(item => {
+      console.log(item.id)
+      if(item.id === parseInt(e.target.value)){
+        totalPriceEl.textContent = item.price.toLocaleString();
+      };
+    });
   });
   // 카트 폼 서브밋 이벤트 리스너
   cartFormEl.addEventListener('submit', async (e) => {
     e.preventDefault();
     // 장바구니 요청에서 필요한 데이터셋 :: 옵션, 수량
     const quantity = parseInt(e.target.elements.cartamount.value);
-    const option = parseInt(optionSelectEl.value);
+    const option = parseInt(e.target.elements.option.value);
     console.log({
       quantity,
       option
     });
-    // await api.post('/cartItems', {
-    //   ordered: false,
-    //   quantity: quantity,
-    //   optionId:option
-    // });
+    await api.post('/cartItems', {
+      ordered: false,
+      quantity: quantity,
+      optionId:option
+    });
 
     // 장바구니 호출
     drawCartTemp();
@@ -299,20 +297,26 @@ const drawCartTemp = async() => {
     const quantityEl = frag.querySelector('.quantity');
     const totalPriceEl = frag.querySelector('.total-price');
     const productInfoEl = frag.querySelector('.product-info');
+    const deleteEl = frag.querySelector('.delete');
     // 3. 필요한 데이터 불러오기
     // 4. 내용 채우기
     imgEl.setAttribute('src', item.mainImgUrl);
     titleEl.textContent = item.title;
-    pirceEl.textContent = cartItems[index].option.price;
-    quantityEl.textContent = cartItems[index].quantity;
+    pirceEl.textContent = cartItems[index].option.price.toLocaleString();
+    quantityEl.value = cartItems[index].quantity;
     totalPriceEl.textContent = (cartItems[index].option.price * cartItems[index].quantity).toLocaleString();
     productInfoEl.textContent = item.description;
     // 5. 이벤트 리스너 등록하기
+    // 삭제 버튼 이벤트 리스너
+    deleteEl.addEventListener('click', async (e) => {
+      console.log('delete plz');
+    })
     // 6. 템플릿을 문서에 삽입
     cartListEl.appendChild(frag);
 
   });
   // 5. 이벤트 리스너 등록하기
+
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
   rootEl.appendChild(frag);
