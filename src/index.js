@@ -65,12 +65,24 @@ const drawFragment = async (frag) => {
   const logoEl = layoutFrag.querySelector('.logo');
   const categoriesEl = layoutFrag.querySelector('.categories');
   const logoutBtnEl = layoutFrag.querySelector('.logout');
+  const signupBtnEl = layoutFrag.querySelector('.signup');
   const cartShortCutBtnEl = layoutFrag.querySelector('.cart-short-cut');
   const orderedShortCutBtnEl = layoutFrag.querySelector('.ordered-short-cut');
 
   // 3. 필요한 데이터 불러오기
   const { data: productList } = await api.get('/products');
   // 4. 내용 채우기
+
+  // 로그아웃 버튼 분기처리
+  if(localStorage.getItem('token')){
+    categoriesEl.style.display = "flex"
+    logoutBtnEl.style.display = 'inline-block';
+    signupBtnEl.style.display = "none";
+  }else{
+    categoriesEl.style.display = "none"
+    logoutBtnEl.style.display = 'none';
+    signupBtnEl.style.display = "inline-block";
+  }
   // 카테고리 배열 만들기
   productList.forEach(item => {
     // 상품을 돌면서 카테고리 중복체크하여 푸쉬
