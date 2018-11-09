@@ -32,8 +32,8 @@
   <!-- 시작 :: 로그인 폼 템플릿 ::  -->
   <template id="loginTemp">
     <form class="login-form">
-      <input type="text" name="username">
-      <input type="password" name="password">
+      <input type="text" name="username" placeholder="id">
+      <input type="password" name="password" placeholder="password">
       <button>Login</button>
       <!-- <button>Join</button> -->
       <p>test id : qwer</p>
@@ -41,6 +41,19 @@
     </form>
   </template>
   <!-- 끝 :: 로그인 폼 템플릿 ::  -->
+
+  <!-- 시작 :: 회원가입 폼 템플릿 ::  -->
+  <template id="signUpTemp">
+    <form class="signup">
+      <input type="text" name="username" placeholder="id">
+      <input type="password" name="password" placeholder="password">
+      <!-- <input type="password" name="password-confirm"> -->
+      <button>signup</button>
+    </form>
+  </template>
+  <!-- 끝 :: 회원가입 폼 템플릿 ::  -->
+
+  <!-- 시작 :: 공통 레이아웃 템플릿 :: -->
   <template id="layout">
     <nav class="nav">
       <h1 class="logo">
@@ -58,6 +71,8 @@
 
     <div class="main"></div>
   </template>
+  <!-- 끝 :: 공통 레이아웃 템플릿 :: -->
+
   <!-- 시작 :: 상품 리스트 템플릿 :: -->
   <template id="productListTemp">
     <ul class="product-list"></ul>

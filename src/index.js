@@ -41,6 +41,7 @@ const templates = {
   cartListItemTemp: document.querySelector('#cartListItem').content,
   orderListTemp: document.querySelector('#orderListTemp').content,
   orderListItemTemp: document.querySelector('#orderListItemTemp').content,
+  signUpTemp: document.querySelector('#signUpTemp').content,
 }
 
 const rootEl = document.querySelector('.root')
@@ -127,9 +128,13 @@ const drawFragment = async (frag) => {
   orderedShortCutBtnEl.addEventListener('click', async (e) => {
     drawAllMyOrderList();
   });
+  // 로그아웃 버튼 이벤트 리스너
   logoutBtnEl.addEventListener('click', async(e) =>{
-    localStorage.removeItem('token');
+    localStorage.removeItem('token'); // 토큰 삭제
     drawLoginForm();
+  });
+  signupBtnEl.addEventListener('click', (e) => {
+    drawSignUpForm();
   });
   // 6. 템플릿을 문서에 삽입
   mainEl.appendChild(frag);
@@ -138,6 +143,31 @@ const drawFragment = async (frag) => {
   rootEl.appendChild(layoutFrag)
 }
 
+// 회원가입 폼 그리기
+const drawSignUpForm = () => {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.signUpTemp, true);
+  // 2. 요소 선택
+  const formEl = frag.querySelector('.signup');
+  // 3. 필요한 데이터 불러오기
+  // 4. 내용 채우기
+  // 5. 이벤트 리스너 등록하기
+  formEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    // 회원가입 요청
+    const username = e.target.elements.username.value;
+    const password = e.target.elements.password.value;
+    api.post('/users/register',{
+      username,
+      password
+    });
+
+    alert(`${username}님 회원가입이 완료되었습니다. 가입한 아이디로, 로그인 해주세요.`)
+    drawLoginForm();
+  });
+  // 6. 템플릿을 문서에 삽입
+  drawFragment(frag);
+}
 
 // 로그인 폼 템플릿 그리기 함수
 const drawLoginForm = () => {
