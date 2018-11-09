@@ -29,6 +29,7 @@ api.interceptors.response.use(function (response) {
 });
 
 const templates = {
+  layoutTemp: document.querySelector('#layout').content,
   loginTemplate: document.querySelector('#loginTemp').content,
   productListTemplate: document.querySelector('#productListTemp').content,
   productListItemTemp: document.querySelector('#productListItemTemp').content,
@@ -53,6 +54,29 @@ const categories = []; // 상품으로부터 카테고리 목록을 저장할 �
 // 4. 내용 채우기
 // 5. 이벤트 리스너 등록하기
 // 6. 템플릿을 문서에 삽입
+
+const drawFragment = (frag) => {
+  const layoutFrag = document.importNode(templates.layoutTemp, true)
+
+
+  // 1. 템플릿 복사
+  // 2. 요소 선택
+  const mainEl = layoutFrag.querySelector('.main')
+  const logoEl = layoutFrag.querySelector('.logo')
+
+  // 3. 필요한 데이터 불러오기
+  // 4. 내용 채우기
+
+  // 5. 이벤트 리스너 등록하기
+  logoEl.addEventListener('click', (e) => {
+    drawProductList();
+  });
+  // 6. 템플릿을 문서에 삽입
+  mainEl.appendChild(frag);
+
+  rootEl.textContent = ''
+  rootEl.appendChild(layoutFrag)
+}
 
 // 카테고리 바 템플릿 그리기 함수
 const drawCategory = async () => {
@@ -88,9 +112,7 @@ const drawCategory = async () => {
     category.appendChild(frag);
   })
   // 5. 이벤트 리스너 등록하기
-  document.querySelector('.logo').addEventListener('click', (e) => {
-    drawProductList();
-  });
+
   // 6. 템플릿을 문서에 삽입
   // root 엘리먼트에 삽입하지 않고 따로 nav 엘리먼트를 만든 이유는 카테고리 항목이 네비게이션 역할을 하기 때문에, 어떤 템플릿이 출력되어도 고정되어서 나타나야 하기 때문이다.
   document.querySelector('.nav').textContent = '';
@@ -123,8 +145,7 @@ const drawLoginForm = () => {
     drawProductList();
   });
   // 6. 템플릿을 문서에 삽입
-  rootEl.textContent = '';
-  rootEl.appendChild(frag);
+  drawFragment(frag);
 }
 
 // 상품 리스트 템플릿 그리기 함수
@@ -174,8 +195,7 @@ const drawProductList = async (category) => {
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
 
-  rootEl.textContent = '';
-  rootEl.appendChild(frag);
+  drawFragment(frag);
 }
 
 const drawProductDetail = async (productId) => {
@@ -263,8 +283,7 @@ const drawProductDetail = async (productId) => {
     drawCartTemp();
   })
   // 6. 템플릿을 문서에 삽입
-  rootEl.textContent = '';
-  rootEl.appendChild(frag);
+  drawFragment(frag);
 }
 
 // 장바구니 템플릿 그리는 함수
@@ -386,8 +405,7 @@ const drawCartTemp = async() => {
     drawOrderList(orderId); // orderId 를 인자로 넣어줘서 주문내역 api 호출시 사용 할 수 있도록 한다.
   })
   // 6. 템플릿을 문서에 삽입
-  rootEl.textContent = '';
-  rootEl.appendChild(frag);
+  drawFragment(frag);
 }
 
 const drawOrderList = async (orderId) => {
@@ -456,8 +474,7 @@ const drawOrderList = async (orderId) => {
 
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
-  rootEl.textContent = '';
-  rootEl.appendChild(frag);
+  drawFragment(frag);
 }
 
 const drawAllMyOrderList = async () => {
@@ -519,8 +536,7 @@ const drawAllMyOrderList = async () => {
   });
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
-  rootEl.textContent = '';
-  rootEl.appendChild(frag);
+  drawFragment(frag);
 }
 
 // 개발용 버튼
