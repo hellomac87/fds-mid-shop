@@ -321,6 +321,16 @@ const drawProductDetail = async (productId) => {
       quantity,
       option
     });
+    // 같은 옵션의 상품이 장바구니에 담기지 않도록
+    const { data } = await api.get('/cartItems'); // 카트 조회
+
+    for(const item of data){ // 조회 데이터로 현재 상품과 optionId 가 같은 상품이 존재할 경우
+      if(item.optionId === option){
+        alert('장바구니에 같은 옵션의 아이템이 존재합니다.');
+        return;
+      }
+    }
+
     await api.post('/cartItems', {
       ordered: false,
       quantity: quantity,
