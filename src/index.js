@@ -463,17 +463,57 @@ const drawAllMyOrderList = async () => {
   const frag = document.importNode(templates.orderListTemp,true);
   // 2. 요소 선택
   const allOrderList = frag.querySelector('.order-list');
+  // 템플릿에서 필요없는 tag 숨기기
+  const hiddenTotl = frag.querySelector('.total-order-wrap')
+  hiddenTotl.style.display = 'none';
   // 3. 필요한 데이터 불러오기
   // 카트아이템에서 ordered가 true 안 값의 아이들을 option 정보와 함께 불러온다.
   const {data: myAllorderList} = await api.get('/cartItems',{
     params: {
       ordered: true,
-      _expand: 'option'
+      _expand: ['order','option'],
     }
   });
+  console.log(myAllorderList);
+
+  const params = new URLSearchParams();
+  myAllorderList.forEach(c => params.append('id', c.optionId))
+  params.append('_expand', 'product')
+
+  const { data: myAllorderData } = await api.get('/options', {
+    params
+  });
+
+  console.log(myAllorderData);
   // 4. 내용 채우기
-  myAllorderList.forEach((orderItem) => {
-    console.log(orderItem);
+  myAllorderList.forEach((item) => {
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.orderListItemTemp, true);
+
+    // 2. 요소 선택
+    const imgEl = frag.querySelector('.img');
+    const titleEl = frag.querySelector('.title');
+    const quantityEl = frag.querySelector('.quantity');
+    const optionEl = frag.querySelector('.option');
+    const priceEl = frag.querySelector('.price');
+    const orderPriceEl = frag.querySelector('.order-price');
+    const orderTimeEl = frag.querySelector('.order-time');
+
+    // 3. 필요한 데이터 불러오기
+
+    // 4. 내용 채우기
+    const {product} = myAllorderData.find(x => x.id === item.optionId)
+    // 5. 이벤트 리스너 등록하기
+    orderTimeEl.textContent = new Date(item.order.orderTime).toLocaleTimeString();
+    imgEl.setAttribute('src', product.mainImgUrl);
+    titleEl.textContent = product.title;
+    quantityEl.textContent = item.quantity;
+    optionEl.textContent = item.option.title;
+    priceEl.textContent = item.option.price.toLocaleString();;
+    orderPriceEl.textContent = (item.option.price * item.quantity).toLocaleString();
+    // 6. 템플릿을 문서에 삽입
+
+    allOrderList.appendChild(frag);
   });
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
