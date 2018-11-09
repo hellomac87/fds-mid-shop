@@ -78,9 +78,13 @@ const drawFragment = async (frag) => {
     categoriesEl.style.display = "flex"
     logoutBtnEl.style.display = 'inline-block';
     signupBtnEl.style.display = "none";
+    cartShortCutBtnEl.style.display = 'inline-block';
+    orderedShortCutBtnEl.style.display = 'inline-block';
   }else{
     categoriesEl.style.display = "none"
     logoutBtnEl.style.display = 'none';
+    cartShortCutBtnEl.style.display = 'none';
+    orderedShortCutBtnEl.style.display = 'none';
     signupBtnEl.style.display = "inline-block";
   }
   // 카테고리 배열 만들기
@@ -109,7 +113,11 @@ const drawFragment = async (frag) => {
 
   // 5. 이벤트 리스너 등록하기
   logoEl.addEventListener('click', (e) => {
-    drawProductList();
+    if(!localStorage.getItem('token')){
+      return;
+    }else{
+      drawProductList();
+    }
   });
   cartShortCutBtnEl.addEventListener('click', async (e) => {
     // drawOrderList('16');
