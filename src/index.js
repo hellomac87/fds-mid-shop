@@ -61,8 +61,10 @@ const drawFragment = (frag) => {
 
   // 1. 템플릿 복사
   // 2. 요소 선택
-  const mainEl = layoutFrag.querySelector('.main')
-  const logoEl = layoutFrag.querySelector('.logo')
+  const mainEl = layoutFrag.querySelector('.main');
+  const logoEl = layoutFrag.querySelector('.logo');
+  const cartShortCutBtnEl = layoutFrag.querySelector('.cart-short-cut');
+  const orderedShortCutBtnEl = layoutFrag.querySelector('.ordered-short-cut');
 
   // 3. 필요한 데이터 불러오기
   // 4. 내용 채우기
@@ -70,6 +72,14 @@ const drawFragment = (frag) => {
   // 5. 이벤트 리스너 등록하기
   logoEl.addEventListener('click', (e) => {
     drawProductList();
+  });
+  cartShortCutBtnEl.addEventListener('click', async (e) => {
+    // drawOrderList('16');
+    drawCartTemp();
+  });
+  // 전체 주문내역 보기 버튼
+  orderedShortCutBtnEl.addEventListener('click', async (e) => {
+    drawAllMyOrderList();
   });
   // 6. 템플릿을 문서에 삽입
   mainEl.appendChild(frag);
@@ -538,16 +548,6 @@ const drawAllMyOrderList = async () => {
   // 6. 템플릿을 문서에 삽입
   drawFragment(frag);
 }
-
-// 개발용 버튼
-document.querySelector('.cart-short-cut').addEventListener('click', async(e)=>{
-  // drawOrderList('16');
-  drawCartTemp();
-});
-// 전체 주문내역 보기 버튼
-document.querySelector('.ordered-short-cut').addEventListener('click', async(e)=>{
-  drawAllMyOrderList();
-});
 
 
 // 첫 접근시
