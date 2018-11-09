@@ -154,11 +154,13 @@ const drawProductList = async (category) => {
     const imgBox = frag.querySelector('.img-wrap');
     const title = frag.querySelector('.title');
     const description = frag.querySelector('.description');
+    const priceEl = frag.querySelector('.price');
     // 3. 필요한 데이터 불러오기
     // 4. 내용 채우기
     imgBox.style.backgroundImage = `url(${item.mainImgUrl})`;
     title.textContent = item.title;
     description.textContent = item.description;
+    priceEl.textContent = (item.options[0].price).toLocaleString();
     // 5. 이벤트 리스너 등록하기
     // 이미지박스 이벤트 리스너 :: 클릭시 상세페이지 템플릿을 호출
     imgBox.addEventListener('click', (e) => {
