@@ -538,7 +538,6 @@ const drawAllMyOrderList = async () => {
 if (localStorage.getItem('token')){
   // 토큰이 존재하면 바로 상품 리스트 템플릿을 그려준다.
   drawProductList();
-  drawCategory();// 로그인 후 처음 실행시 함수가 실행되지 않음
   // drawOrderList('1');
 }else{
   // 토큰이 존재하지 않으면 로그임 템플릿을 그려준다.
