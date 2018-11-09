@@ -162,7 +162,7 @@ const drawSignUpForm = () => {
       password
     });
 
-    alert(`${username}님 회원가입이 완료되었습니다. 가입한 아이디로, 로그인 해주세요.`)
+    alert(`${username}님 회원가입이 완료되었습니다. 가입한 아이디로, 로그인 해주세요.`);
     drawLoginForm();
   });
   // 6. 템플릿을 문서에 삽입
