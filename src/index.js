@@ -55,7 +55,7 @@ const categories = []; // 상품으로부터 카테고리 목록을 저장할 �
 // 5. 이벤트 리스너 등록하기
 // 6. 템플릿을 문서에 삽입
 
-const drawFragment = (frag) => {
+const drawFragment = async (frag) => {
   const layoutFrag = document.importNode(templates.layoutTemp, true)
 
 
@@ -63,11 +63,36 @@ const drawFragment = (frag) => {
   // 2. 요소 선택
   const mainEl = layoutFrag.querySelector('.main');
   const logoEl = layoutFrag.querySelector('.logo');
+  const categoriesEl = layoutFrag.querySelector('.categories');
   const cartShortCutBtnEl = layoutFrag.querySelector('.cart-short-cut');
   const orderedShortCutBtnEl = layoutFrag.querySelector('.ordered-short-cut');
 
   // 3. 필요한 데이터 불러오기
+  const { data: productList } = await api.get('/products');
   // 4. 내용 채우기
+  // 카테고리 배열 만들기
+  productList.forEach(item => {
+    // 상품을 돌면서 카테고리 중복체크하여 푸쉬
+    if (!categories.includes(item.category)) {
+      categories.push(item.category);
+    }
+  });
+  categories.forEach(item => {
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.categoryItemTemp, true);
+    // 2. 요소 선택
+    const categoriItemEl = frag.querySelector('.categoriItem');
+    // 3. 필요한 데이터 불러오기
+    // 4. 내용 채우기
+    categoriItemEl.textContent = item;
+    // 5. 이벤트 리스너 등록하기
+    categoriItemEl.addEventListener('click', async (e) => {
+      const categoryName = e.target.textContent;
+      drawProductList(categoryName);
+    })
+    // 6. 템플릿을 문서에 삽입
+    categoriesEl.appendChild(frag);
+  })
 
   // 5. 이벤트 리스너 등록하기
   logoEl.addEventListener('click', (e) => {
@@ -88,47 +113,6 @@ const drawFragment = (frag) => {
   rootEl.appendChild(layoutFrag)
 }
 
-// 카테고리 바 템플릿 그리기 함수
-const drawCategory = async () => {
-  // 1. 템플릿 복사
-  const frag = document.importNode(templates.categoryTemp, true);
-  // 2. 요소 선택
-  const category = frag.querySelector('.categories')
-  // 3. 필요한 데이터 불러오기
-  const { data: productList } = await api.get('/products');
-  // 카테고리 배열 만들기
-  productList.forEach(item => {
-    // 상품을 돌면서 카테고리 중복체크하여 푸쉬
-    if (!categories.includes(item.category)) {
-      categories.push(item.category);
-    }
-  });
-  console.log(categories);
-  // 4. 내용 채우기
-  categories.forEach(item => {
-    // 1. 템플릿 복사
-    const frag = document.importNode(templates.categoryItemTemp, true);
-    // 2. 요소 선택
-    const categoriItemEl = frag.querySelector('.categoriItem');
-    // 3. 필요한 데이터 불러오기
-    // 4. 내용 채우기
-    categoriItemEl.textContent = item;
-    // 5. 이벤트 리스너 등록하기
-    categoriItemEl.addEventListener('click', async (e) => {
-      const categoryName = e.target.textContent;
-      drawProductList(categoryName)
-    })
-    // 6. 템플릿을 문서에 삽입
-    category.appendChild(frag);
-  })
-  // 5. 이벤트 리스너 등록하기
-
-  // 6. 템플릿을 문서에 삽입
-  // root 엘리먼트에 삽입하지 않고 따로 nav 엘리먼트를 만든 이유는 카테고리 항목이 네비게이션 역할을 하기 때문에, 어떤 템플릿이 출력되어도 고정되어서 나타나야 하기 때문이다.
-  document.querySelector('.nav').textContent = '';
-  document.querySelector('.nav').appendChild(frag);
-  document.querySelector('.nav').style.display = 'flex';
-}
 
 // 로그인 폼 템플릿 그리기 함수
 const drawLoginForm = () => {

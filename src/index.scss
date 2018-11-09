@@ -58,47 +58,42 @@ h1{text-align: center;}
     cursor: pointer;
   }
 }
-.logo{
+.nav{
   position: fixed;
   top:0;
   left:0;
-  width:100%;
+  width: 100%;
   height: 30px;
   background: #fff;
-  color:#000;
-  text-align: center;
   display: flex;
-  align-items: center;
   justify-content: center;
-  img{
-    width:20px;
-    cursor: pointer;
+  align-items: center;
+  h1{
+    img{
+      width:20px;
+      vertical-align: bottom;
+      cursor: pointer;
+    }
   }
 }
-.nav{
+.categories{
   position: fixed;
   top:30px;
   left:0;
-  width:100%;
+  width: 100%;
   height: 30px;
   background: #000;
   color:#fff;
   display: flex;
   justify-content: center;
   align-items: center;
-  display: none;
-
-  .categories{
-    display: flex;
-    justify-content: center;
-    .categoriItem{
-      list-style: none;
-      margin: 0 10px;
-      cursor: pointer;
-    }
+  list-style: none;
+  li{
+    margin: 0 15px;
+    cursor: pointer;
   }
-
 }
+
 
 .product-detail-wrap{
   width:65%;
@@ -290,6 +285,7 @@ $transformOriginY: 170%;
   color: #fff;
 }
 .btn-wrap{
+  padding-right: 15px;
   position: fixed;
   top:5px;
   right: 0;

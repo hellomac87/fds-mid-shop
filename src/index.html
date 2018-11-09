@@ -29,10 +29,6 @@
 
   <!-- 템플릿을 이곳에 작성해주세요 -->
 
-  <!-- 시작 :: 네비게이션 루트 (카테고리 메뉴) ::  -->
-  <div class="nav"></div>
-  <!-- 끝 :: 네비게이션 루트 (카테고리 메뉴) ::  -->
-
   <!-- 시작 :: 로그인 폼 템플릿 ::  -->
   <template id="loginTemp">
     <form class="login-form">
@@ -46,16 +42,19 @@
   </template>
   <!-- 끝 :: 로그인 폼 템플릿 ::  -->
   <template id="layout">
-    <h1 class="logo">
-      <img src="https://image.freepik.com/free-icon/apple-logo_318-40184.jpg" alt="logo">
-    </h1>
-    <div class="btn-wrap">
-      <button class="signup">signup</button>
-      <button class="logout">logout</button>
-      <button class="cart-short-cut">cart</button>
-      <button class="ordered-short-cut">all orderd</button>
-    </div>
+    <nav class="nav">
+      <h1 class="logo">
+        <img src="https://image.freepik.com/free-icon/apple-logo_318-40184.jpg" alt="logo">
+      </h1>
+      <div class="btn-wrap">
+        <button class="signup">signup</button>
+        <button class="logout">logout</button>
+        <button class="cart-short-cut">cart</button>
+        <button class="ordered-short-cut">all orderd</button>
+      </div>
+    </nav>
 
+    <ul class="categories"></ul>
 
     <div class="main"></div>
   </template>
