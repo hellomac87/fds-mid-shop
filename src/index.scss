@@ -283,3 +283,27 @@ $transformOriginY: 170%;
   right:50px;
   z-index: 100;
 }
+
+// 주문내역 템플릿
+.order-list{
+  width:800px;
+  margin: 0 auto;
+  .order-list-item{
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    .img-wrap{
+      width:150px;
+      text-align: center;
+      .img{
+        max-width: 150px;
+        max-height: 150px;
+      }
+    }
+
+    .order-info{
+      width:calc(100% - 150px);
+      padding: 0 15px;
+    }
+  }
+}

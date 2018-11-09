@@ -384,6 +384,11 @@ const drawOrderList = async (orderId) => {
   const frag = document.importNode(templates.orderListTemp,true);
   // 2. 요소 선택
   const orderLitsEl = frag.querySelector('.order-list');
+  const totalOrderQuantityEl = frag.querySelector('.total-order-quantity');
+  const totalOrderPriceEl = frag.querySelector('.total-order-price');
+
+  let totalOrderQuantity = 0; // 총 주문 갯수 계산용 변수
+  let totalOrderPrice = 0; // 총 합계 계산용 변수
   // 3. 필요한 데이터 불러오기
   const { data: { cartItems } } = await api.get('/orders/' + orderId, {
     params: {
@@ -397,10 +402,41 @@ const drawOrderList = async (orderId) => {
 
   const { data: options } = await api.get('/options', {
     params
-  })
-
-  console.log(JSON.stringify(options));
+  });
+  // options, cartItems를 이용하여 화면을 그려봅시다.
+  console.log(options);
   // 4. 내용 채우기
+  // options데이터를 이용하여 리스트 그리기
+  options.forEach((item, index) => {
+    // 1. 템플릿 복사
+    const frag = document.importNode(templates.orderListItemTemp, true);
+    // 2. 요소 선택
+    const imgEl = frag.querySelector('.img');
+    const titleEl = frag.querySelector('.title');
+    const quantityEl = frag.querySelector('.quantity');
+    const optionEl = frag.querySelector('.option');
+    const priceEl = frag.querySelector('.price');
+    const orderPriceEl = frag.querySelector('.order-price');
+    // 3. 필요한 데이터 불러오기
+    // 4. 내용 채우기
+    imgEl.setAttribute('src', item.product.mainImgUrl);
+    titleEl.textContent = item.product.title;
+    quantityEl.textContent = cartItems[index].quantity;
+    optionEl.textContent = item.title;
+    priceEl.textContent = item.price;
+    orderPriceEl.textContent = item.price * cartItems[index].quantity;
+
+    // 총합 계산에 더하기
+    totalOrderQuantity += cartItems[index].quantity;
+    totalOrderPrice += item.price * cartItems[index].quantity;
+    // 5. 이벤트 리스너 등록하기
+    // 6. 템플릿을 문서에 삽입
+    orderLitsEl.appendChild(frag);
+  });
+
+  totalOrderQuantityEl.textContent = totalOrderQuantity;
+  totalOrderPriceEl.textContent = totalOrderPrice;
+
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = '';
@@ -410,15 +446,17 @@ const drawOrderList = async (orderId) => {
 
 // 개발용 버튼
 document.querySelector('.cart-short-cut').addEventListener('click', async(e)=>{
-  drawCartTemp();
-})
+  drawOrderList('1');
+  // drawCartTemp();
+});
 
 
 // 첫 접근시
 if (localStorage.getItem('token')){
   // 토큰이 존재하면 바로 상품 리스트 템플릿을 그려준다.
-  drawProductList();
+  // drawProductList();
   drawCategory();// 로그인 후 처음 실행시 함수가 실행되지 않음
+  drawOrderList('1');
 }else{
   // 토큰이 존재하지 않으면 로그임 템플릿을 그려준다.
   drawLoginForm();
