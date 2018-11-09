@@ -64,6 +64,7 @@ const drawFragment = async (frag) => {
   const mainEl = layoutFrag.querySelector('.main');
   const logoEl = layoutFrag.querySelector('.logo');
   const categoriesEl = layoutFrag.querySelector('.categories');
+  const logoutBtnEl = layoutFrag.querySelector('.logout');
   const cartShortCutBtnEl = layoutFrag.querySelector('.cart-short-cut');
   const orderedShortCutBtnEl = layoutFrag.querySelector('.ordered-short-cut');
 
@@ -106,6 +107,10 @@ const drawFragment = async (frag) => {
   orderedShortCutBtnEl.addEventListener('click', async (e) => {
     drawAllMyOrderList();
   });
+  logoutBtnEl.addEventListener('click', async(e) =>{
+    localStorage.removeItem('token');
+    drawLoginForm();
+  });
   // 6. 템플릿을 문서에 삽입
   mainEl.appendChild(frag);
 
@@ -135,7 +140,6 @@ const drawLoginForm = () => {
     });
     // 응답 성공시
     localStorage.setItem('token', res.data.token); // 로컬스토리지에 토큰 저장
-    drawCategory();
     drawProductList();
   });
   // 6. 템플릿을 문서에 삽입
