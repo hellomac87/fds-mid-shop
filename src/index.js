@@ -360,19 +360,23 @@ const drawCartTemp = async() => {
       params
     });
 
-    const ps = asdf.map(item => {
-      api.patch('/cartItems/' + item.id, {
-        ordered: true,
-        orderId
-      });
-    });
-    await Promise.all(ps);
-    // for(const item of asdf){
-    //   await api.patch('/cartItems/'+ item.id,{
+    // const ps = asdf.map(item => {
+    //   api.patch('/cartItems/' + item.id, {
     //     ordered: true,
     //     orderId
     //   });
-    // }
+    // });
+
+    // await Promise.all(ps);
+
+
+    for(const item of asdf){
+      await api.patch('/cartItems/'+ item.id,{
+        ordered: true,
+        orderId
+      });
+    }
+
     // 주문 api 요청하기
 
     // 주문리스트 템플릿 그리기
@@ -402,8 +406,13 @@ const drawOrderList = async (orderId) => {
     }
   });
   console.log(cartItems)
+
   const params = new URLSearchParams()
-  cartItems.forEach(c => params.append('id', c.optionId))
+
+  cartItems.forEach(c => {
+    params.append('id', c.optionId)
+  });
+
   params.append('_expand', 'product')
 
   const { data: options } = await api.get('/options', {
@@ -449,11 +458,37 @@ const drawOrderList = async (orderId) => {
   rootEl.appendChild(frag);
 }
 
+const drawAllMyOrderList = async () => {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.orderListTemp,true);
+  // 2. 요소 선택
+  const allOrderList = frag.querySelector('.order-list');
+  // 3. 필요한 데이터 불러오기
+  // 카트아이템에서 ordered가 true 안 값의 아이들을 option 정보와 함께 불러온다.
+  const {data: myAllorderList} = await api.get('/cartItems',{
+    params: {
+      ordered: true,
+      _expand: 'option'
+    }
+  });
+  // 4. 내용 채우기
+  myAllorderList.forEach((orderItem) => {
+    console.log(orderItem);
+  });
+  // 5. 이벤트 리스너 등록하기
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = '';
+  rootEl.appendChild(frag);
+}
 
 // 개발용 버튼
 document.querySelector('.cart-short-cut').addEventListener('click', async(e)=>{
-  // drawOrderList('1');
+  // drawOrderList('16');
   drawCartTemp();
+});
+// 전체 주문내역 보기 버튼
+document.querySelector('.ordered-short-cut').addEventListener('click', async(e)=>{
+  drawAllMyOrderList();
 });
 
 
