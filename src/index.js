@@ -284,6 +284,12 @@ const drawCartTemp = async() => {
       _expand: 'option'
     }
   });
+  // 장바구니에 아무것도 들어있지 않다면 다시 상품 리스트를 출력한다.
+  if (cartItems.length <= 0){
+    alert('장바구니에 아무것도 담겨있지 않습니다.');
+    drawProductList();
+    return;
+  }
   console.log('장바구니 데이터', cartItems)
   // 주문되지 않은 '현재 사용자의' 카트의 정보의 productId 설정을를 이용해서 다른 속성들을 불러오는 요청을 한다.
   const params = new URLSearchParams();
@@ -446,17 +452,17 @@ const drawOrderList = async (orderId) => {
 
 // 개발용 버튼
 document.querySelector('.cart-short-cut').addEventListener('click', async(e)=>{
-  drawOrderList('1');
-  // drawCartTemp();
+  // drawOrderList('1');
+  drawCartTemp();
 });
 
 
 // 첫 접근시
 if (localStorage.getItem('token')){
   // 토큰이 존재하면 바로 상품 리스트 템플릿을 그려준다.
-  // drawProductList();
+  drawProductList();
   drawCategory();// 로그인 후 처음 실행시 함수가 실행되지 않음
-  drawOrderList('1');
+  // drawOrderList('1');
 }else{
   // 토큰이 존재하지 않으면 로그임 템플릿을 그려준다.
   drawLoginForm();
