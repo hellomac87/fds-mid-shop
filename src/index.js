@@ -392,6 +392,7 @@ const drawCartTemp = async() => {
     const totalPriceEl = frag.querySelector('.total-price');
     const productInfoEl = frag.querySelector('.product-info');
     const deleteEl = frag.querySelector('.delete');
+    const editEl = frag.querySelector('.edit-btn');
 
     // 3. 필요한 데이터 불러오기
     // console.log()
@@ -411,7 +412,16 @@ const drawCartTemp = async() => {
     deleteEl.addEventListener('click', async (e) => {
       await api.delete('/cartItems/' + item.id);
       drawCartTemp();
-    })
+    });
+    // 수정 버튼 이벤트 리스너
+    editEl.addEventListener('click', async (e) => {
+      const quantity = parseInt(quantityEl.value);
+      await api.patch('cartItems/' + item.id, {
+        quantity: quantity
+      });
+
+      drawCartTemp();
+    });
     // 6. 템플릿을 문서에 삽입
     cartListEl.appendChild(frag);
 
