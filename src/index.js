@@ -325,7 +325,7 @@ const drawProductDetail = async (productId) => {
     const { data } = await api.get('/cartItems'); // 카트 조회
 
     for(const item of data){ // 조회 데이터로 현재 상품과 optionId 가 같은 상품이 존재할 경우
-      if(item.optionId === option){
+      if(item.optionId === option && item.ordered === false){
         alert('장바구니에 같은 옵션의 아이템이 존재합니다.');
         return;
       }
@@ -393,6 +393,7 @@ const drawCartTemp = async() => {
     const productInfoEl = frag.querySelector('.product-info');
     const deleteEl = frag.querySelector('.delete');
     const editEl = frag.querySelector('.edit-btn');
+    const checkboxEl = frag.querySelector('.checkbox');
 
     // 3. 필요한 데이터 불러오기
     // console.log()
@@ -400,6 +401,8 @@ const drawCartTemp = async() => {
     // 4. 내용 채우기
     const product = options.find(x => x.id === item.option.productId)
     // console.log(product);
+    checkboxEl.setAttribute('data-id', item.optionId);
+    checkboxEl.setAttribute('checked', '');
     imgEl.setAttribute('src',product.mainImgUrl);
     titleEl.textContent = product.title;
     pirceEl.textContent = (item.option.price).toLocaleString();
@@ -434,17 +437,29 @@ const drawCartTemp = async() => {
   orderBtnEl.addEventListener('click', async (e) => {
     e.preventDefault();
     // 여기에서 주문 처리를 해주어야 한다.
+    const checkBoxEl = document.querySelectorAll('.checkbox');
+    const checkedCartItemIds = []; // 체크된 카트아이템 옵션아이디 배열
+    checkBoxEl.forEach(checkbox => {
+      if (checkbox.checked){
+        checkedCartItemIds.push(checkbox.getAttribute('data-id'));
+      }
+    });
     // 주문 객체 만들기
     // '주문' 객체를 먼저 만들고 나서
     const { data: { id: orderId } } = await api.post('/orders', {
       orderTime: Date.now() // 현재 시각을 나타내는 정수
     });
 
-    // 위에서 만든 주문 객체의 id를 장바구니 항목의 orderId에 넣어줍니다.
     const params = new URLSearchParams();
-    cartItems.forEach(c => params.append('id', c.id))
+
+    checkedCartItemIds.forEach(c => {
+      c = parseInt(c);
+      params.append('optionId', parseInt(c));
+      params.append('ordered', false);
+    });
 
     // 주문 :: 이라는 행위는 장바구니 데이터의 ordered 를 true 로 patch 하는 행위이다.
+    // 카트 아이템에서, 체크된 배열안의 optionId, ordered = false 인 정보를 찾는다.
     const {data: asdf} = await api.get('/cartItems/', {
       params
     });
@@ -458,7 +473,7 @@ const drawCartTemp = async() => {
 
     // await Promise.all(ps);
 
-
+    // 응답받은 정보를 바탕으로 패치요청을 한다.
     for(const item of asdf){
       await api.patch('/cartItems/'+ item.id,{
         ordered: true,
