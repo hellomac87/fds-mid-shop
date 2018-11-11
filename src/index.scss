@@ -322,3 +322,23 @@ $transformOriginY: 170%;
     }
   }
 }
+
+.pagination{
+  min-width: 50px;
+  max-width: 300px;
+  margin:50px auto;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  li{
+    width:15px;
+    height: 15px;
+    background: #006ce7;
+    color:#fff;
+    margin: 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+  }
+}

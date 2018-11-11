@@ -42,6 +42,7 @@ const templates = {
   orderListTemp: document.querySelector('#orderListTemp').content,
   orderListItemTemp: document.querySelector('#orderListItemTemp').content,
   signUpTemp: document.querySelector('#signUpTemp').content,
+  pageTemp: document.querySelector('#paginationItem').content,
 }
 
 const rootEl = document.querySelector('.root')
@@ -203,13 +204,17 @@ const drawProductList = async (category) => {
 
   // 2. 요소 선택
   const list = frag.querySelector('.product-list');
+  const pagenateListEl = frag.querySelector('.pagination');
 
   // 3. 필요한 데이터 불러오기
   // 제품 api 요청
+  const limitItems = 6;
   const { data: productList } = await api.get('/products',{
     params: {
+      _page: 1,
+      _limit: limitItems,
       _embed: "options",
-      category: category
+      category: category,
     }
   });
   console.log(productList);// 확인용 콘솔
@@ -235,10 +240,18 @@ const drawProductList = async (category) => {
     imgBox.addEventListener('click', (e) => {
       drawProductDetail(item.id);
     });
-
     // 6. 템플릿을 문서에 삽입
     list.appendChild(frag);
 
+  });
+  // 페이지네이션
+  const pagenateArr = [1, 2, 3];
+  pagenateArr.forEach(page => {
+    const frag = document.importNode(templates.pageTemp, true);
+    const pageItemEl = frag.querySelector('.page-item');
+
+    pageItemEl.textContent = page;
+    pagenateListEl.appendChild(frag);
   });
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
