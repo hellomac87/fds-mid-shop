@@ -208,17 +208,17 @@ const drawProductList = async (category, page) => {
 
   // 3. 필요한 데이터 불러오기
   // 제품 api 요청
-  const limitItems = 6;
-  const { data: productList } = await api.get('/products',{
+  const limit = 6;
+  const res = await api.get('/products',{
     params: {
       _page: page,
-      _limit: limitItems,
+      _limit: limit,
       _embed: "options",
       category: category,
     }
   });
+  const productList = res.data;
   console.log(productList);// 확인용 콘솔
-
   // 4. 내용 채우기
   // 프로덕트 리스트 응답 데이터를 바탕으로 프로덕트 아이템 생성 및 내용 채워넣기
   productList.forEach(item => {
@@ -245,6 +245,9 @@ const drawProductList = async (category, page) => {
 
   });
   // 페이지네이션
+  const totalCount = res.headers['x-total-count'];
+  const paginationArr = res.headers['x-total-count'] / limit;
+  console.log({totalCount});
   const pagenateArr = [1, 2];
   pagenateArr.forEach((page, index) => {
     const frag = document.importNode(templates.pageTemp, true);
@@ -253,6 +256,7 @@ const drawProductList = async (category, page) => {
     pageItemEl.textContent = page;
 
     pageItemEl.addEventListener('click', (e) => {
+
       drawProductList(category, parseInt(pageItemEl.textContent))
     })
     pagenateListEl.appendChild(frag);
