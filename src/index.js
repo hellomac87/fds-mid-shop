@@ -198,7 +198,7 @@ const drawLoginForm = () => {
 }
 
 // 상품 리스트 템플릿 그리기 함수
-const drawProductList = async (category) => {
+const drawProductList = async (category, page) => {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.productListTemplate, true);
 
@@ -211,7 +211,7 @@ const drawProductList = async (category) => {
   const limitItems = 6;
   const { data: productList } = await api.get('/products',{
     params: {
-      _page: 1,
+      _page: page,
       _limit: limitItems,
       _embed: "options",
       category: category,
@@ -245,12 +245,16 @@ const drawProductList = async (category) => {
 
   });
   // 페이지네이션
-  const pagenateArr = [1, 2, 3];
-  pagenateArr.forEach(page => {
+  const pagenateArr = [1, 2];
+  pagenateArr.forEach((page, index) => {
     const frag = document.importNode(templates.pageTemp, true);
     const pageItemEl = frag.querySelector('.page-item');
 
     pageItemEl.textContent = page;
+
+    pageItemEl.addEventListener('click', (e) => {
+      drawProductList(category, parseInt(pageItemEl.textContent))
+    })
     pagenateListEl.appendChild(frag);
   });
   // 5. 이벤트 리스너 등록하기
